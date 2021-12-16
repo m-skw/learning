@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VNname": {
+            "type": "string",
+            "defaultValue": "ARMTemplateVN",
+            "metadata": {
+                "description": "Name for VN"
+            }
+        },
+        "VNdisplayName": {
+            "type": "string",
+            "defaultValue": "TestingVN",
+            "metadata": {
+                "description": "Name for VN"
+            }
+        },
+        "VNAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Address for VN"
+            }
+        },
+        "SubnetAname": {
+            "type": "string",
+            "defaultValue": "SubnetA",
+            "metadata": {
+                "description": "Subnet A name"
+            }
+        },
+        "SubnetBname": {
+            "type": "string",
+            "defaultValue": "SubnetB",
+            "metadata": {
+                "description": "Subnet B name"
+            }
+        },
+        "SubnetBPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/24",
+            "metadata": {
+                "description": "Subnet B address"
+            }
+        },
+        "SubnetAPrefix": {
+            "type": "string",
+            "defaultValue": "10.2.0.0/24",
+            "metadata": {
+                "description": "Subnet A address"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+ 
+   {
+       "name": "[parameters('SubnetAname')]",
+       "type": "Microsoft.Network/virtualNetworks",
+       "apiVersion": "2019-11-01",
+       "location": "[resourceGroup().location]",
+       "tags": {
+           "displayName": "[parameters('VNdisplayName')]"
+       },
+       "properties": {
+           "addressSpace": {
+           "addressPrefixes": "[parameters('VNAddressPrefix')]"
+           },
+           "subnets": [
+               {
+                   "name": "[parameters('SubnetAname')]",
+                   "properties": {
+                   "addressPrefix": "[parameters('SubnetAPrefix')]"
+                   }
+               },
+               {
+                   "name": "[parameters('SubnetBname')]",
+                   "properties": {
+                   "addressPrefix": "[parameters('SubnetBPrefix')]"
+                   }
+               }
+           ]
+       }
+   }    
+
+    ]
+}
