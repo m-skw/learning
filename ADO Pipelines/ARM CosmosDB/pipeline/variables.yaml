@@ -3,7 +3,7 @@
           value: 'Testy Skwiera V2'
 
         - name: 'subscriptionID'
-          value: '357794df-05ee-4428-a315-7c313103cefa'
+          value: '#'
 
         - name: 'backendAZRG'
           value: 'skwiera-learning-rg'
@@ -12,4 +12,4 @@
           value: 'West Europe'
 
         - name: 'templatelink'
-          value: 'https://commontemplates.blob.core.windows.net/cosmos/2.1/azuredeploy.json'
+          value: '#'
