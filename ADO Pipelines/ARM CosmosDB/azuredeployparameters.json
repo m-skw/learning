@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "value": "cosmos-dbdfgdfghdfgdfgdfgfdgd"
+      },
+      "deployedBy": {
+          "value": "value"
+      },
+      "tags": {
+          "value": {}
+      },
+      "replicaRegions": {
+          "value": []
+      },
+      "api": {
+          "value": "MongoDB"
+      },
+      "consistencyLevel": {
+          "value": "Session"
+      },
+      "maxStalenessPrefix": {
+          "value": 100
+      },
+      "maxIntervalInSeconds": {
+          "value": 5
+      },
+      "enableMultipleWriteLocations": {
+          "value": true
+      },
+      "enableAutoFailover": {
+          "value": true
+      },
+      "allowedVirtualNetworkSubnetResourceIds": {
+          "value": []
+      },
+      "allowedIpAddresses": {
+          "value": []
+      },
+      "allowAzurePortalAccess": {
+          "value": true
+      },
+      "allowAzureServicesAccess": {
+          "value": false
+      },
+      "omsWorkspaceResourceId": {
+          "value": "/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/defaultresourcegroup-weu/providers/microsoft.operationalinsights/workspaces/defaultworkspace-357794df-05ee-4428-a315-7c313103cefa-weu"
+      }
+    }
+  }

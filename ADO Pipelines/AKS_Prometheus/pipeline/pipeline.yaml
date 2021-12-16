@@ -1,0 +1,125 @@
+resources:
+  repositories:
+  - repository: self
+    trigger:
+    - master
+
+stages:
+  - stage: DEV
+    jobs:
+    - deployment: TERRAFORM
+      displayName: 'Terraform deployment'
+      pool:
+        nvmImage: 'ubuntu-latest'
+        workspace:
+          clean: all
+      variables:
+      - template: variables.yaml
+
+      environment: 'DEV'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - checkout: self
+            - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+              displayName: 'Replace Terraform variables'
+              inputs:
+                  targetFiles: '**/*.tfvars'
+                  tokenPrefix: '__'
+                  tokenSuffix: '__'
+            - task: TerraformInstaller@0
+              displayName: "Install Terraform"
+              inputs:
+                terraformVersion: '1.0.9'
+            - task: TerraformTaskV2@2
+              displayName: 'Terraform init'
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                backendServiceArm: ${{variables.backendServiceARM}}
+                backendAzureRmResourceGroupName: ${{variables.backendAZRG}}
+                backendAzureRmStorageAccountName: ${{variables.backendAzureRmStorageAccountName}}
+                backendAzureRmContainerName: ${{variables.backendAzureRmContainerName}}
+                backendAzureRmKey: ${{variables.backendAzureRmKey}}
+            - task: TerraformTaskV2@2
+              displayName: 'Terraform Validate'
+              inputs:
+                provider: 'azurerm'
+                command: 'validate'
+            - task: TerraformTaskV2@2
+              displayName: "Terraform Plan"
+              inputs:
+                provider: 'azurerm'
+                command: 'plan'
+                commandOptions: '-input=false -var-file=dev.tfvars'
+                environmentServiceNameAzureRM: ${{variables.backendServiceARM}}
+            - task: TerraformTaskV2@2
+              displayName: 'Terraform Apply'
+              inputs:
+                provider: 'azurerm'
+                command: 'apply'
+                commandOptions: '-input=false -var-file=dev.tfvars'
+                environmentServiceNameAzureRM: ${{variables.backendServiceARM}}
+            - task: Kubernetes@1
+              displayName: 'Create Namespace for Prometheus'
+              inputs:
+                connectionType: ${{variables.connectionType}}
+                azureSubscriptionEndpoint: ${{variables.azureSubscription}}
+                azureResourceGroup: ${{variables.rgNAME}}
+                kubernetesCluster: ${{variables.AKSNAME}}
+                command: 'apply'
+                useConfigurationFile: true
+                configurationType: 'inline'
+                inline: |
+                  apiVersion: v1
+                  kind: Namespace
+                  metadata:
+                    name: ${{variables.PrometheusNamespaceName}}
+                secretType: 'dockerRegistry'
+                containerRegistryType: 'Azure Container Registry'
+            - task: HelmDeploy@0
+              displayName: 'Add Prometheus Operator Helm Repo'
+              inputs:
+                connectionType: ${{variables.connectionType}}
+                azureSubscription: ${{variables.azureSubscription}}
+                azureResourceGroup: ${{variables.rgNAME}}
+                kubernetesCluster: ${{variables.AKSNAME}}
+                namespace: ${{variables.PrometheusNamespaceName}}
+                command: 'repo'
+                arguments: 'add prometheus-community https://prometheus-community.github.io/helm-charts'
+            - task: HelmDeploy@0
+              displayName: 'Update Helm Repo'
+              inputs:
+                connectionType: ${{variables.connectionType}}
+                azureSubscription: ${{variables.azureSubscription}}
+                azureResourceGroup: ${{variables.rgNAME}}
+                kubernetesCluster: ${{variables.AKSNAME}}
+                namespace: ${{variables.PrometheusNamespaceName}}
+                command: 'repo'
+                arguments: 'update'
+            - task: HelmDeploy@0
+              displayName: 'Install Helm Prometheus stack'
+              inputs:
+                connectionType: ${{variables.connectionType}}
+                azureSubscription: ${{variables.azureSubscription}}
+                azureResourceGroup: ${{variables.rgNAME}}
+                kubernetesCluster: ${{variables.AKSNAME}}
+                namespace: ${{variables.PrometheusNamespaceName}}
+                command: 'upgrade'
+                chartType: 'Name'
+                chartName: 'prometheus-community/kube-prometheus-stack'
+                releaseName: 'stable'
+                force: true
+            - task: Kubernetes@1
+              inputs:
+                connectionType: ${{variables.connectionType}}
+                azureSubscriptionEndpoint: ${{variables.azureSubscription}}
+                azureResourceGroup: ${{variables.rgNAME}}
+                kubernetesCluster: ${{variables.AKSNAME}}
+                namespace: ${{variables.PrometheusNamespaceName}}
+                command: 'apply'
+                useConfigurationFile: true
+                configuration: 'pipeline/loadbalancer.yaml'
+                secretType: 'dockerRegistry'
+                containerRegistryType: 'Azure Container Registry'

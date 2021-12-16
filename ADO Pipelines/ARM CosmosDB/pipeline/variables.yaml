@@ -1,0 +1,15 @@
+      variables:
+        - name: 'backendServiceARM'
+          value: 'Testy Skwiera V2'
+
+        - name: 'subscriptionID'
+          value: '357794df-05ee-4428-a315-7c313103cefa'
+
+        - name: 'backendAZRG'
+          value: 'skwiera-learning-rg'
+
+        - name: 'Location'
+          value: 'West Europe'
+
+        - name: 'templatelink'
+          value: 'https://commontemplates.blob.core.windows.net/cosmos/2.1/azuredeploy.json'

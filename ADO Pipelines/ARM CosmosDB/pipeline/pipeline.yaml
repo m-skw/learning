@@ -1,0 +1,46 @@
+resources:
+  repositories:
+  - repository: self
+    trigger:
+    - main
+
+stages:
+  - stage: DEV
+    jobs:
+    - deployment: ARM
+      displayName: 'ARM Template deployment'
+      pool:
+        nvmImage: 'ubuntu-latest'
+        workspace:
+          clean: all
+      variables:
+      - template: variables.yaml
+
+      environment: 'DEV'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - checkout: self
+            # - task: AzureResourceManagerTemplateDeployment@3
+            #   displayName: 'Deploy Template'
+            #   inputs:
+            #     azureResourceManagerConnection: ${{variables.backendServiceARM}}
+            #     subscriptionId: ${{variables.subscriptionID}}
+            #     action: 'Create Or Update Resource Group'
+            #     resourceGroupName: ${{variables.backendAZRG}}
+            #     location: ${{variables.Location}}
+            #     templateLocation: 'URL of the file'
+            #     csmFileLink: ${{variables.templatelink}}
+            #     csmParametersFile: 'azruredeployparamters.json'
+            #     #overrideParameters: 'dsds'
+            #     deploymentMode: 'Incremental'
+            #     deploymentName: 'CosmosDB'
+            #     #deploymentOutputs: 'dsdsds'
+            - task: AzurePowerShell@5
+              displayName: 'Deploy Template'
+              inputs:
+                azureSubscription: ${{variables.backendServiceARM}}
+                ScriptType: 'InlineScript'
+                Inline: 'New-AzResourceGroupDeployment -ResourceGroupName ${{variables.backendAZRG}} -TemplateUri ${{variables.templatelink}} -TemplateParameterFile $(Build.SourcesDirectory)/azuredeployparameters.json'
+                azurePowerShellVersion: 'LatestVersion'

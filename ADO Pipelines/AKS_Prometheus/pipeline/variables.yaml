@@ -1,0 +1,46 @@
+      variables:
+        - name: 'backendServiceARM'
+          value: 'Testy Skwiera V2'
+
+        - name: 'backendAZRG'
+          value: 'skwiera-learning-rg'
+
+        - name: 'backendAzureRmStorageAccountName'
+          value: 'skwieralearningtfstate'
+
+        - name: 'backendAzureRmContainerName'
+          value: 'tfstate'
+          
+        - name: 'backendAzureRmKey'
+          value: 'aksprometheus.tfstate'
+          
+        - name: 'connectionType'
+          value: 'Azure Resource Manager'
+
+        - name: 'azureSubscription'
+          value: 'Shared Services (357794df-05ee-4428-a315-7c313103cefa)'                                     
+
+        - name: 'rgNAME'
+          value: 'skwiera-learning-pipeline'
+
+        - name: 'rgLOCATION'
+          value: 'westeurope'
+
+        - name: 'AKSNAME'
+          value: 'TESTAKS'
+
+        - name: 'PrometheusNamespaceName'
+          value: 'monitoring'          
+
+        - name: "DefaultNodePoolNAME"
+          value: 'default'
+
+        - name: 'NodeCOUNT'
+          value: 2
+        
+        - name: 'VMSIZE' 
+          value: 'Standard_D2_v2'
+
+          #The type of identity used for the managed cluster. Possible values are SystemAssigned and UserAssigned. If UserAssigned is set, a user_assigned_identity_id must be set as well.
+        - name: 'IdentityTYPE'
+          value: 'SystemAssigned'
