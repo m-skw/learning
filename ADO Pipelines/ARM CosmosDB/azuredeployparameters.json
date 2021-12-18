@@ -45,7 +45,7 @@
           "value": false
       },
       "omsWorkspaceResourceId": {
-          "value": "/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/defaultresourcegroup-weu/providers/microsoft.operationalinsights/workspaces/defaultworkspace-357794df-05ee-4428-a315-7c313103cefa-weu"
+          "value": "xxx"
       }
     }
   }
