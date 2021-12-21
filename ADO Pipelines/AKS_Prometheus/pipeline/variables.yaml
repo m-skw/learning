@@ -18,7 +18,7 @@
           value: 'Azure Resource Manager'
 
         - name: 'azureSubscription'
-          value: 'Shared Services (357794df-05ee-4428-a315-7c313103cefa)'                                     
+          value: 'xx'                                     
 
         - name: 'rgNAME'
           value: 'skwiera-learning-pipeline'
